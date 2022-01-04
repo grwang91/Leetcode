@@ -1,36 +1,40 @@
 class Solution {
+    class Freq implements Comparator<Integer>
+    {
+        public int compare(Integer i1, Integer i2)
+        {
+            return Integer.compare(i2.intValue(),i1.intValue());
+        }
+    }
     public int minSetSize(int[] arr) {
-        Map<Integer, Integer> hash = new HashMap<>();
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
+       
+        HashMap<Integer,Integer> hm = new HashMap<>();
+        PriorityQueue<Integer> pq = new PriorityQueue(arr.length,new Freq());
         
-        for (int num : arr) {
-            hash.put(num, hash.getOrDefault(num,0)+1);
+         //Use a HashMap to keep a count of frequencies of each element
+        for(int i=0;i<arr.length;i++)
+        {
+          hm.put(arr[i],hm.getOrDefault(arr[i],0)+1);            
         }
-        int len = 0;
-        for(int key : hash.keySet()) {
-            len+=hash.get(key);
-            pq.add(hash.get(key));
-            
-            while(!pq.isEmpty()) {
-                if(len-pq.peek() >= arr.length/2) {
-                    len-=pq.poll();
-                } else {
-                    break;
-                }
-            }
+        
+        //Iterate over the Hashmap values and add them to Priority Queue so that we get the values in descending order
+        //By Sorting in descending order, we ensure that we need to remove minimum type of numbers
+        for(Map.Entry<Integer,Integer> entry: hm.entrySet())
+        {
+           pq.add(entry.getValue());
+         
         }
-//         int cnt = 0;
-        
-//         while(!pq.isEmpty()) {
-//             len+=pq.poll();
-//             cnt++;
-            
-//             if(len >= arr.length/2) {
-//                 return cnt;
-//             }
-//         }
-        
-        return pq.size();
-        
+       
+        //Keep removing elements from Priority Queue and adding them until the length becomes greater than or equal to half of length of array. 
+        int count=0; int len=0;
+        while(!pq.isEmpty())
+        {
+            count++;
+            len+=pq.poll();
+            if(len>=arr.length/2)
+                return count;
+          
+        }
+        return count;
     }
 }
