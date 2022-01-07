@@ -1,6 +1,5 @@
 class Solution {
     public int removeDuplicates(int[] nums) {
-        int max = 10001;
         int ans = nums.length;
         
         int currentNum = -10001;
@@ -13,7 +12,7 @@ class Solution {
             }
             
             if(++cnt > 2) {
-                nums[i] = max;
+                nums[i] = Integer.MAX_VALUE;
                 ans--;
             }
         }
