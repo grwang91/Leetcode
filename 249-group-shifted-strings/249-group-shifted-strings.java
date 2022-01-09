@@ -5,7 +5,6 @@ class Solution {
         
         for (String s : strings) {
             String shiftedS = makeStartWithA(s);
-            System.out.println(shiftedS);
             if(!map.containsKey(shiftedS)) {
                 map.put(shiftedS, new ArrayList<>());
             }
