@@ -1,39 +1,36 @@
 class WordDistance {
-    Map<String, List<Integer>> indexMap;
 
-    public WordDistance(String[] wordsDict) {
-        indexMap = new HashMap<>();
-        
-        for (int i=0; i<wordsDict.length; i++) {
-            if(!indexMap.containsKey(wordsDict[i])) {
-                indexMap.put(wordsDict[i], new ArrayList<>());
-            }
-            indexMap.get(wordsDict[i]).add(i);
+    HashMap<String, ArrayList<Integer>> locations;
+
+    public WordDistance(String[] words) {
+        this.locations = new HashMap<String, ArrayList<Integer>>();
+
+        // Prepare a mapping from a word to all it's locations (indices).
+        for (int i = 0; i < words.length; i++) {
+            ArrayList<Integer> loc = this.locations.getOrDefault(words[i], new ArrayList<Integer>());
+            loc.add(i);
+            this.locations.put(words[i], loc);
         }
     }
-    
+
     public int shortest(String word1, String word2) {
-        List<Integer> word1Index = indexMap.get(word1);
-        List<Integer> word2Index = indexMap.get(word2);
-        
-        int minDistance = Integer.MAX_VALUE;
-        
-        int idx1 = 0, idx2 = 0;
-        while(idx1 < word1Index.size() && idx2 < word2Index.size()) {
-            minDistance = Math.min(minDistance, Math.abs(word1Index.get(idx1)-word2Index.get(idx2)));
-            if(word1Index.get(idx1) < word2Index.get(idx2)) {
-                idx1++;
+        ArrayList<Integer> loc1, loc2;
+
+        // Location lists for both the words
+        // the indices will be in SORTED order by default
+        loc1 = this.locations.get(word1);
+        loc2 = this.locations.get(word2);
+
+        int l1 = 0, l2 = 0, minDiff = Integer.MAX_VALUE;
+        while (l1 < loc1.size() && l2 < loc2.size()) {
+            minDiff = Math.min(minDiff, Math.abs(loc1.get(l1) - loc2.get(l2)));
+            if (loc1.get(l1) < loc2.get(l2)) {
+                l1++;
             } else {
-                idx2++;
+                l2++;
             }
         }
-        
-        return minDistance;
+
+        return minDiff;
     }
 }
-
-/**
- * Your WordDistance object will be instantiated and called as such:
- * WordDistance obj = new WordDistance(wordsDict);
- * int param_1 = obj.shortest(word1,word2);
- */
