@@ -1,15 +1,9 @@
 class Solution {
     public void solveSudoku(char[][] board) {
-        List<Set<Character>> row = new ArrayList<>();
-        List<Set<Character>> col = new ArrayList<>();
-        List<Set<Character>> region = new ArrayList<>();
+        boolean[][] row = new boolean[9][10];
+        boolean[][] col = new boolean[9][10];
+        boolean[][] region = new boolean[9][10];
         int cnt = 0;
-        
-        for (int i=0; i<9; i++) {
-            row.add(new HashSet<>());
-            col.add(new HashSet<>());
-            region.add(new HashSet<>());
-        }
         
         for (int i=0; i<9; i++) {
             for (int j=0; j<9; j++) {
@@ -18,16 +12,16 @@ class Solution {
                     continue;
                 }
                 cnt++;
-                row.get(i).add(c);
-                col.get(j).add(c);
-                region.get(getRegion(i,j)).add(c);
+                row[i][c-'0'] = true;
+                col[j][c-'0'] = true;
+                region[getRegion(i,j)][c-'0'] = true;
             }
         }
         
         backTrack(board, row, col, region, cnt);
     }
     
-    private boolean backTrack(char[][] board, List<Set<Character>> row, List<Set<Character>> col, List<Set<Character>> region, int cnt) {
+    private boolean backTrack(char[][] board,boolean[][] row, boolean[][] col, boolean[][] region, int cnt) {
         if(cnt == 81) {
             return true;
         }
@@ -40,19 +34,19 @@ class Solution {
                 int regionNum = getRegion(i,j);
                 for (int k=1; k<=9; k++) {
                     char c = (char)(k+'0');
-                    if(!row.get(i).contains(c) && !col.get(j).contains(c) && !region.get(regionNum).contains(c)) {
+                    if(!row[i][c-'0'] && !col[j][c-'0'] && !region[getRegion(i,j)][c-'0']) {
                         board[i][j] = c;
-                        row.get(i).add(c);
-                        col.get(j).add(c);
-                        region.get(regionNum).add(c);
+                        row[i][k] = true;
+                        col[j][k] = true;
+                        region[regionNum][k] = true;
                         boolean isCompleted = backTrack(board, row, col, region, cnt+1);
                         if(isCompleted) {
                             return true;
                         }
                         board[i][j] = '.';
-                        row.get(i).remove(c);
-                        col.get(j).remove(c);
-                        region.get(regionNum).remove(c);
+                        row[i][k] = false;
+                        col[j][k] = false;
+                        region[regionNum][k] = false;
                     }
                 }
                 return false;
