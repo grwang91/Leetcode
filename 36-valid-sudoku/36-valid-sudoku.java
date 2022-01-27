@@ -1,27 +1,21 @@
 class Solution {
     public boolean isValidSudoku(char[][] board) {
-        List<Set<Character>> row = new ArrayList<>();
-        List<Set<Character>> col = new ArrayList<>();
-        List<Set<Character>> region = new ArrayList<>();
-        
-        for (int i=0; i<9; i++) {
-            row.add(new HashSet<>());
-            col.add(new HashSet<>());
-            region.add(new HashSet<>());
-        }
+        boolean[][] row = new boolean[9][10];
+        boolean[][] col = new boolean[9][10];
+        boolean[][] region = new boolean[9][10];
         
         for (int i=0; i<9; i++) {
             for (int j=0; j<9; j++) {
                 char c = board[i][j];
                 if(c=='.') continue;
                 
-                if(row.get(i).contains(c) || col.get(j).contains(c) || region.get(getRegion(i,j)).contains(c)) {
+                if(row[i][c-'0'] || col[j][c-'0'] || region[getRegion(i,j)][c-'0']) {
                     return false;
                 }
                 
-                row.get(i).add(c);
-                col.get(j).add(c);
-                region.get(getRegion(i,j)).add(c);
+                row[i][c-'0'] = true;
+                col[j][c-'0'] = true;
+                region[getRegion(i,j)][c-'0'] = true;
             }
         }
         
