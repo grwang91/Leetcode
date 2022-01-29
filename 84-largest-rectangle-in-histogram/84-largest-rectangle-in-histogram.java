@@ -1,32 +1,26 @@
 class Solution {
     public int largestRectangleArea(int[] heights) {
-        PriorityQueue<Node> pq = new PriorityQueue<>((n1, n2) -> n2.val-n1.val);
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
         int ans = 0;
         
         for (int i=0; i<heights.length; i++) {
-            int idx = i;
-            while(!pq.isEmpty() && pq.peek().val >= heights[i]) {
-                Node current = pq.poll();
-                ans = Math.max(ans, current.val*(i-current.idx));
-                idx = Math.min(idx, current.idx);
+            
+            while(stack.peek() != -1 && heights[stack.peek()] >= heights[i]) {
+                
+                int popped = stack.pop();
+                ans = Math.max(ans,heights[popped]*(i-stack.peek()-1));
             }
-            pq.add(new Node(heights[i],idx));
+            stack.push(i);
         }
         
-        while(!pq.isEmpty()) {
-            Node current = pq.poll();
-            ans = Math.max(ans, current.val*(heights.length-current.idx));
+        while(stack.peek() != -1) {
+            int popped = stack.pop();
+            ans = Math.max(ans,heights[popped]*(heights.length-stack.peek()-1));
+
         }
         
         return ans;
     }
-    
-    class Node {
-        int val, idx;
-        
-        public Node (int val, int idx) {
-            this.val = val;
-            this.idx = idx;
-        }
-    }
+
 }
