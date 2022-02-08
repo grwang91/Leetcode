@@ -18,9 +18,9 @@ class Solution {
         
         while(!q.isEmpty()) {
             Node current = q.poll();
-            // if(current.dist > rooms[current.row][current.col]) {
-            //     return;
-            // }
+            if(current.dist > rooms[current.row][current.col]) {
+                continue;
+            }
             rooms[current.row][current.col]=Math.min(current.dist, rooms[current.row][current.col]);
             
             for (int i=0; i<4; i++) {
