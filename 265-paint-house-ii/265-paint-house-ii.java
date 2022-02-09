@@ -2,20 +2,19 @@ class Solution {
     public int minCostII(int[][] costs) {
         int n = costs.length;
         int k = costs[0].length;
-        int[][] dp = new int[n][k];
         
         int min = Integer.MAX_VALUE;
         int secondMin = 0;
         int minColor = 0;
         
         for (int i=0; i<k; i++) {
-            dp[0][i] = costs[0][i];
-            if(dp[0][i] < min) {
+            int cost = costs[0][i];
+            if(cost < min) {
                 secondMin = min;
-                min = dp[0][i];
+                min = cost;
                 minColor = i;
-            } else if(dp[0][i] < secondMin){
-                secondMin = dp[0][i];
+            } else if(cost < secondMin){
+                secondMin = cost;
             }
         }
         
@@ -24,13 +23,13 @@ class Solution {
             int tmpSecondMin = 0;
             int tmpMinColor = 0;
             for (int j=0; j<k; j++) {
-                dp[i][j] = j==minColor? secondMin+costs[i][j]: min+costs[i][j];
-                if(dp[i][j] < tmpMin) {
+                int cost = j==minColor? secondMin+costs[i][j]: min+costs[i][j];
+                if(cost < tmpMin) {
                     tmpSecondMin = tmpMin;
-                    tmpMin = dp[i][j];
+                    tmpMin = cost;
                     tmpMinColor = j;
-                } else if (dp[i][j] < tmpSecondMin) {
-                    tmpSecondMin = dp[i][j];
+                } else if (cost < tmpSecondMin) {
+                    tmpSecondMin = cost;
                 }
             }
             min = tmpMin;
