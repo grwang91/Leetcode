@@ -4,14 +4,17 @@ class Solution {
             return "";
         }
         
+        char[] arr = palindrome.toCharArray();
         for (int i=0; i<palindrome.length()/2; i++) {
-            char c = palindrome.charAt(i);
+            char c = arr[i];
             
             if(c=='a' || palindrome.length()%2==1 && i == palindrome.length()/2) continue;
             
-            return palindrome.substring(0,i)+"a"+palindrome.substring(i+1);
+            arr[i] = 'a';
+            return String.valueOf(arr);
         }
         
-        return palindrome.substring(0,palindrome.length()-1)+"b";        
+        arr[arr.length-1]='b';
+        return String.valueOf(arr);
     }
 }
