@@ -40,7 +40,7 @@ class Solution {
         
         inorder(root.left);
         
-        if(last != null) {
+        if(first != null) {
             root.left = last;
             last.right = root;
         } else {
