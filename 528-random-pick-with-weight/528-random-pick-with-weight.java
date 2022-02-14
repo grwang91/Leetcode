@@ -15,12 +15,10 @@ class Solution {
         double target = sum*Math.random();
         
         int s = 0, e = weight.length;
-        int idx = 0;
         while(s<e) {
             int m = (s+e)/2;
             
             if(weight[m] < target) {
-                idx = Math.max(idx, m);
                 s = m+1;
             } else {
                 e = m;
