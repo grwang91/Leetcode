@@ -1,66 +1,39 @@
-class StreamChecker {
-    
-    TrieNode root;
-    
-    String queryString = "";
+class TrieNode {
+    Map<Character, TrieNode> children = new HashMap();
+    boolean word = false;
+}
 
-   public StreamChecker(String[] words) {
-       this.root = new TrieNode();
-       
-       TrieNode tmp = this.root;
-       
-       for (int i=0; i<words.length; i++) {
-           tmp = this.root;
-           for (int j=words[i].length()-1; j>=0; j--) {
-               char c = words[i].charAt(j);
-               
-               if(!tmp.next.containsKey(c)) {
-                   tmp.next.put(c, new TrieNode());
-               }
-               tmp = tmp.next.get(c);
-               
-           }
-           tmp.isEnd = true;
-           //System.out.println(tmp.isEnd);
-       }
+class StreamChecker {
+    TrieNode trie = new TrieNode();
+    Deque<Character> stream = new ArrayDeque();
+
+    public StreamChecker(String[] words) {
+        for (String word : words) {
+            TrieNode node = trie;
+            String reversedWord = new StringBuilder(word).reverse().toString();
+            for (char ch : reversedWord.toCharArray()) {
+                if (!node.children.containsKey(ch)) {
+                    node.children.put(ch, new TrieNode());
+                }
+                node = node.children.get(ch);
+            }
+            node.word = true;    
+        }
     }
     
     public boolean query(char letter) {
-        //System.out.println();
-        this.queryString = letter + queryString;
+        stream.addFirst(letter);
         
-        
-        TrieNode tmp = this.root;
-        
-        for (int i=0; i<this.queryString.length(); i++) {
-            char c = this.queryString.charAt(i);
-            //System.out.println(c);
-            
-            if(!tmp.next.containsKey(c)) {
-                return false;
+        TrieNode node = trie;
+        for (char ch : stream) {
+            if (node.word) {
+                return true;    
             }
-            
-            tmp = tmp.next.get(c);
-            
-            if(tmp.isEnd) {
-                return true;
+            if (!node.children.containsKey(ch)) {
+                return false;    
             }
-            
+            node = node.children.get(ch);    
         }
-        return tmp.isEnd;
-        
-        
-    }
-    
-    class TrieNode {
-        boolean isEnd = false;
-        HashMap<Character, TrieNode> next =  new HashMap<>();
-        
+        return node.word;
     }
 }
-
-/**
- * Your StreamChecker object will be instantiated and called as such:
- * StreamChecker obj = new StreamChecker(words);
- * boolean param_1 = obj.query(letter);
- */
