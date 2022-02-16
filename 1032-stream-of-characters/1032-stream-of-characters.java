@@ -1,49 +1,61 @@
 class StreamChecker {
-    Trie root;
-    String stream = "";
-    public StreamChecker(String[] words) {
-        root = new Trie();
-        
-        for(String word : words) {
-            Trie tmp = root;
-            for (int i=word.length()-1; i>=0; i--) {
-                char c = word.charAt(i);
-                if(tmp.children[c-'a'] == null) {
-                    tmp.children[c-'a'] = new Trie();
-                }
-                tmp = tmp.children[c-'a'];
-            }
-            tmp.isEnd = true;
-        }
+    
+    TrieNode root;
+    
+    String queryString = "";
+
+   public StreamChecker(String[] words) {
+       this.root = new TrieNode();
+       
+       TrieNode tmp = this.root;
+       
+       for (int i=0; i<words.length; i++) {
+           tmp = this.root;
+           for (int j=words[i].length()-1; j>=0; j--) {
+               char c = words[i].charAt(j);
+               
+               if(!tmp.next.containsKey(c)) {
+                   tmp.next.put(c, new TrieNode());
+               }
+               tmp = tmp.next.get(c);
+               
+           }
+           tmp.isEnd = true;
+           //System.out.println(tmp.isEnd);
+       }
     }
     
     public boolean query(char letter) {
-        stream+=letter;
+        //System.out.println();
+        this.queryString = letter + queryString;
         
-        Trie tmp = root;
-        for(int i=stream.length()-1; i>=0; i--) {
-            char c = stream.charAt(i);
+        
+        TrieNode tmp = this.root;
+        
+        for (int i=0; i<this.queryString.length(); i++) {
+            char c = this.queryString.charAt(i);
+            //System.out.println(c);
             
-            if(tmp.children[c-'a'] == null) {
+            if(!tmp.next.containsKey(c)) {
                 return false;
             }
             
-            tmp = tmp.children[c-'a'];
+            tmp = tmp.next.get(c);
+            
             if(tmp.isEnd) {
                 return true;
             }
+            
         }
-        return false;
+        return tmp.isEnd;
+        
+        
     }
     
-    class Trie {
-        Trie[] children;
-        boolean isEnd;
+    class TrieNode {
+        boolean isEnd = false;
+        HashMap<Character, TrieNode> next =  new HashMap<>();
         
-        public Trie() {
-            isEnd = false;
-            this.children = new Trie[26];
-        }
     }
 }
 
