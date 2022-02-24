@@ -26,7 +26,6 @@ class Solution {
                 }
             }
             op+=nums.length-(e);
-            // System.out.println(e+1);
             ans = Math.min(ans,op);
         }
         return ans;
