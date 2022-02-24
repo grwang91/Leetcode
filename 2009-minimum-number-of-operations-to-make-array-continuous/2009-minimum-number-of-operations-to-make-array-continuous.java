@@ -11,23 +11,38 @@ class Solution {
         Arrays.sort(nums);
         int ans = nums.length;
         
+        int e = nums.length-1;
         for(int i=0; i<nums.length; i++) {
-            int op = i;
             int max = nums[i]+nums.length-1;
-            
-            int s = i;
-            int e = nums.length;
-            while(s<e) {
-                int m = (s+e)/2;
-                if(nums[m] <= max) {
-                    s = m+1;
-                } else {
-                    e = m;
+            if(e >= nums.length || e>=0 && nums[e] > max) {
+                while(e>= nums.length || e>=0 && nums[e] > max) {
+                    e--;
                 }
+                ans=Math.min(ans, nums.length-(e-i+1));
+            } else {
+                while(e<nums.length && e>=0 && nums[e] <= max) {
+                    e++;
+                }
+                ans= Math.min(ans, nums.length-(e-i));
             }
-            op+=nums.length-(e);
-            ans = Math.min(ans,op);
         }
+//         for(int i=0; i<nums.length; i++) {
+//             int op = i;
+//             int max = nums[i]+nums.length-1;
+            
+//             int s = i;
+//             int e = nums.length;
+//             while(s<e) {
+//                 int m = (s+e)/2;
+//                 if(nums[m] <= max) {
+//                     s = m+1;
+//                 } else {
+//                     e = m;
+//                 }
+//             }
+//             op+=nums.length-(e);
+//             ans = Math.min(ans,op);
+//         }
         return ans;
     }
 }
