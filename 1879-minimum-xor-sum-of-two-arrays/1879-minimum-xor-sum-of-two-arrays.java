@@ -1,24 +1,31 @@
 class Solution {
-    Map<String, Integer> map = new HashMap<>();
-    public int minimumXORSum(int[] nums1, int[] nums2) {
-        return calc(nums1, nums2, 0, 0);
-    }
-    
-    private int calc(int[] nums1, int[] nums2, int idx, int mask) {
-        if(idx == nums1.length) return 0;
-        
-        String key = idx+"#"+mask;
-        if(map.containsKey(key)) return map.get(key);
-        
-        int min = Integer.MAX_VALUE;
-        for(int i=0; i<nums2.length; i++) {
-            if((mask&(1<<i)) == 0) {
-                int sum = (nums1[idx]^nums2[i]) + calc(nums1, nums2, idx+1, mask|(1<<i));
-                min = Math.min(sum, min);
+    public int dfs(int bitmask,int n,int[] mem,int[] n1,int[] n2) {
+        if (mem[bitmask] >= 0) return mem[bitmask];
+        int len = n1.length;
+        int bit = 1<<(len-1);
+        int ans = Integer.MAX_VALUE;
+        int ind = 0;
+        if (n==(n1.length-1)) {
+            while ((bitmask & bit)==0) {
+                bit = bit>>1;
+                ind++;
             }
+            mem[bitmask] = n1[ind] ^ n2[len-1];
+            return mem[bitmask];
         }
-        
-        map.put(key, min);
-        return min;
+        while (bit > 0) {
+            if ((bit & bitmask) > 0) {
+                ans = Math.min(ans,(n1[ind]^n2[n]) + dfs(bitmask & (~bit),n+1,mem,n1,n2));
+            }
+            bit = bit>>1;
+            ind++;
+        }
+        mem[bitmask] = ans;
+        return mem[bitmask];
+    }
+    public int minimumXORSum(int[] nums1, int[] nums2) {
+        int[] mem = new int[(int)Math.pow(2,nums1.length)];
+        Arrays.fill(mem,-1);
+        return dfs((int)Math.pow(2,nums1.length)-1,0,mem,nums1,nums2);
     }
 }
