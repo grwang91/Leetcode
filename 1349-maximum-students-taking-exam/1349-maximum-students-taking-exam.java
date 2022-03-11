@@ -10,7 +10,6 @@ class Solution {
         
         check(map);
         return backTrack(map, seats, 0, 0);
-        // return ans;
     }
     
     private int backTrack(boolean[][] map, char[][] seats, int idx, int pre) {
