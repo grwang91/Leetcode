@@ -1,26 +1,34 @@
 class Solution {
-    int ans = Integer.MAX_VALUE;
+    int[][] memo;
     public int assignBikes(int[][] workers, int[][] bikes) {
-        boolean[] check = new boolean[bikes.length];
+        memo = new int[workers.length][(1<<bikes.length)];
+        for(int i=0; i<memo.length; i++) {
+            Arrays.fill(memo[i],-1);
+        }
         
-        backTrack(workers, bikes, check, 0, 0);
-        
-        return ans;
+        return backTrack(workers, bikes, 0, 0);
     }
     
-    private void backTrack(int[][] workers, int[][] bikes, boolean[] check, int idx, int dist) {
+    private int backTrack(int[][] workers, int[][] bikes, int idx, int mask) {
         if(idx == workers.length) {
-            ans = Math.min(ans, dist);
-            return;
+            return 0;
         }
         
+        if(memo[idx][mask] != -1) return memo[idx][mask];
+        
+        int dist = Integer.MAX_VALUE;
         for(int i=0; i<bikes.length; i++) {
-            if(!check[i]) {
-                check[i] = true;
-                int added = Math.abs(bikes[i][0]-workers[idx][0])+Math.abs(bikes[i][1]-workers[idx][1]);
-                backTrack(workers, bikes, check, idx+1, dist+added);
-                check[i] = false;
+            if((mask&(1<<i)) == 0) {
+                int curr = distance(workers[idx],bikes[i]) + backTrack(workers, bikes, idx+1, mask|(1<<i));
+                dist = Math.min(curr,dist);
             }
         }
+        
+        memo[idx][mask] = dist;
+        return dist;
+    }
+    
+    private int distance(int[] worker, int[] bike) {
+        return Math.abs(worker[0]-bike[0])+Math.abs(worker[1]-bike[1]);
     }
 }
