@@ -1,33 +1,31 @@
 class Solution {
-    int ans = 0;
+    int[][] memo;
     public int maxCompatibilitySum(int[][] students, int[][] mentors) {
-        int n = students.length;
-        int[][] scoreArr = new int[n][n];
-        
-        for (int i=0; i<n; i++) {
-            for (int j=0; j<n; j++) {
-                scoreArr[i][j] = calculate(students[i], mentors[j]);
-            }
+        memo = new int[students.length][(1<<students.length)];
+        for(int i=0; i<memo.length; i++) {
+            Arrays.fill(memo[i], -1);
         }
         
-        backTrack(scoreArr, 0, 0, new boolean[n]);
-        
-        return ans;
+        return backTrack(students, mentors, 0, 0);
     }
     
-    private void backTrack(int[][] scoreArr, int score, int idx, boolean[] check) {
-        if(idx == scoreArr.length) {
-            ans = Math.max(score, ans);
-            return;
+    private int backTrack(int[][] students, int[][] mentors, int mask, int idx) {
+        if(idx == students.length) {
+            return 0;
         }
         
-        for(int i=0; i<scoreArr.length; i++) {
-            if(!check[i]) {
-                check[i] = true;
-                backTrack(scoreArr, score+scoreArr[idx][i], idx+1, check);
-                check[i] = false;
+        if(memo[idx][mask] != -1) return memo[idx][mask];
+        
+        int max = 0;
+        for(int i=0; i<students.length; i++) {
+            if((mask&(1<<i))==0) {
+                int curr = calculate(students[idx], mentors[i]) + backTrack(students, mentors, mask|(1<<i), idx+1);
+                max = Math.max(max, curr);
             }
         }
+        
+        memo[idx][mask] = max;
+        return max;
     }
     
     private int calculate(int[] student, int[] mentors) {
