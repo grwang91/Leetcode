@@ -1,85 +1,76 @@
 class Solution {
-    int diff = Integer.MAX_VALUE;
     public int minimumDifference(int[] nums) {
-        List<List<Integer>> sum1 = new ArrayList<>();
-        List<List<Integer>> sum2 = new ArrayList<>();
-        for(int i=0; i<=nums.length/2; i++) {
-            sum1.add(new ArrayList<>());
-            sum2.add(new ArrayList<>());
-        }
-        int sum = 0;
-        int diff = Integer.MAX_VALUE;
+        int n = nums.length/2, totalSum = 0;
+        for (int num : nums) totalSum += num;
         
-        for(int num: nums) {
-            sum+=num;
-        }
-        
-        for(int i=0; i<(1<<nums.length/2); i++) {
-            int curSum = 0;
-            int mask = 1;
-            int idx = 0;
-            while(mask > 0) {
-                if(((mask) & (i<<nums.length/2)) != 0) {
-                    curSum+=nums[idx];
-                }
-                mask = mask<<1;
-                idx++;
-            }
-            sum1.get(ones(i)).add(curSum);
+        // left(i) stores all subset sum of size i from the left part.
+        // right defined in similar way
+        List<List<Integer>> left = new ArrayList<>(n);
+        List<List<Integer>> right = new ArrayList<>(n);
+        for(int i=0;i<=n;++i) {
+            left.add(new ArrayList<>());
+            right.add(new ArrayList<>());
         }
         
-        for(int i=0; i<(1<<nums.length/2); i++) {
-            int curSum = 0;
-            int mask = 1;
-            int idx = 0;
-            while(mask > 0) {
-                if(((mask) & i) != 0) {
-                    curSum+=nums[idx];
-                }
-                mask = mask<<1;
-                idx++;
-            }
-            sum2.get(ones(i)).add(curSum);
-        }
+        fillSubsetSum(nums, 0, n-1, left);
+        fillSubsetSum(nums, n, 2*n-1, right);
         
-        for(int i=0; i<nums.length/2; i++) {
-            Collections.sort(sum1.get(i));
-            Collections.sort(sum2.get(i));
-        }
-        
-        for(int i=0; i<sum1.size(); i++) {
-            for(int j=0; j<sum1.get(i).size(); j++) {
-                int val = sum1.get(i).get(j);
-                List<Integer> arr = sum2.get(nums.length/2-i);
-                int s = 0, e = arr.size();
-                while(s<e) {
-                    int m = (s+e)/2;
-                    int curSum = val+arr.get(m);
-                    
-                    if(curSum > sum/2) {
-                        e = m;
-                        diff=Math.min(diff, Math.abs(sum-2*curSum));
-                    } else {
-                        s = m+1;
-                        diff=Math.min(diff, Math.abs(sum-2*curSum));
-                    }
-                }
+        int minDiff = Integer.MAX_VALUE;
+        for(int leftSubsetSize=0;leftSubsetSize<=n;++leftSubsetSize) {
+            int rightSubsetSize = n - leftSubsetSize;
+            
+            for(int sum : left.get(leftSubsetSize)) {
+                int minDiffLocal = (int) Math.abs(
+                    findMinimalDifference(sum, right.get(rightSubsetSize), totalSum)
+                );
+                minDiff = Integer.min(minDiff, minDiffLocal);
             }
         }
         
-        return diff;
+        return minDiff;
     }
     
-    private int ones(int a) {
-        int mask = 1;
-        int one=0;
-        while(mask>0) {
-            if((a&mask) !=0) {
-                one++;
-            }
-            mask = mask<<1;
+    /**
+     * O(log(right.size()))
+     */
+    private int findMinimalDifference(int leftSum, List<Integer> right, int totalSum) {
+        int low = 0, high = right.size()-1;
+        int diff = 0, minDiff = Integer.MAX_VALUE;
+        
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            diff = totalSum - 2*leftSum - 2*right.get(mid);
+            minDiff = Integer.min(Math.abs(diff), minDiff);
+            
+            if (diff == 0)
+                return 0;
+            else if (diff > 0) low = mid+1;
+            else high = mid-1;
         }
-        return one;
+        
+        return Integer.min(Math.abs(diff), minDiff);
     }
     
+    /**
+     * O(2^n)
+     * 1 <= n <= 15 => 2^n ~ 2^15 = ~32k
+     */
+    private void fillSubsetSum(int[] nums, int low, int high, List<List<Integer>> resArray) {
+        int n = high - low + 1;
+        
+        for(int i=0;i<(int)Math.pow(2, n);++i) {
+            int subsetSum = 0;
+            int size = 0;
+            for(int j=0;j<16;++j) {
+                if ((i & (1<<j)) > 0 && low+j<nums.length) {
+                    subsetSum += nums[low+j];
+                    ++size;
+                }
+            }
+            
+            resArray.get(size).add(subsetSum);
+        }
+        
+        for(List<Integer> list : resArray) Collections.sort(list);
+    }
 }
