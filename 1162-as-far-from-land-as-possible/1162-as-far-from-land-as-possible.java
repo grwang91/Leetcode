@@ -19,10 +19,6 @@ class Solution {
         int ans = 0;
         while(!q.isEmpty()) {
             Node cur = q.poll();
-//             if(!check[cur.r][cur.c]) {
-//                 ans = Math.max(ans, cur.d);
-//             }
-//             check[cur.r][cur.c] = true;
             ans = Math.max(ans, cur.d);
             
             for(int i=0; i<4; i++) {
