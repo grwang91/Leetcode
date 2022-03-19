@@ -16,10 +16,10 @@ class Solution {
                     int sum = nums[s]+nums[e];
                     if(sum == curTarget) {
                         StringBuilder sb = new StringBuilder();
-                        sb.append(nums[i]);
-                        sb.append(nums[j]);
-                        sb.append(nums[s]);
-                        sb.append(nums[e]);
+                        sb.append((char)(nums[i]+'0'));
+                        sb.append((char)(nums[j]+'0'));
+                        sb.append((char)(nums[s]+'0'));
+                        sb.append((char)(nums[e]+'0'));
                         String hash = sb.toString();
                         if(!set.contains(hash)) {
                             ans.add(new ArrayList<>(Arrays.asList(nums[i], nums[j], nums[s], nums[e])));
