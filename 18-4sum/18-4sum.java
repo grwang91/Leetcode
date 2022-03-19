@@ -15,7 +15,12 @@ class Solution {
                 while(s<e) {
                     int sum = nums[s]+nums[e];
                     if(sum == curTarget) {
-                        String hash = Integer.toString(nums[i])+nums[j]+nums[s]+nums[e];
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(nums[i]);
+                        sb.append(nums[j]);
+                        sb.append(nums[s]);
+                        sb.append(nums[e]);
+                        String hash = sb.toString();
                         if(!set.contains(hash)) {
                             ans.add(new ArrayList<>(Arrays.asList(nums[i], nums[j], nums[s], nums[e])));
                             set.add(hash);
