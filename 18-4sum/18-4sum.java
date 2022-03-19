@@ -1,40 +1,57 @@
 class Solution {
     public List<List<Integer>> fourSum(int[] nums, int target) {
-        List<List<Integer>> ans = new ArrayList<>();
         Arrays.sort(nums);
-        Set<String> set = new HashSet<>();
+        return kSum(nums, target, 0, 4);
+    }
+    
+    public List<List<Integer>> kSum(int[] nums, int target, int start, int k) {
+        List<List<Integer>> res = new ArrayList<>();
         
-        for(int i=0; i<nums.length; i++) {
-            // if(i>0 && nums[i] == nums[i-1]) continue;
-            for(int j=i+1; j<nums.length; j++) {
-                // if(j>i+1 && nums[j] == nums[j-1]) continue;
-                int curTarget = target-nums[i]-nums[j];
-                int s = j+1;
-                int e = nums.length-1;
-                
-                while(s<e) {
-                    int sum = nums[s]+nums[e];
-                    if(sum == curTarget) {
-                        StringBuilder sb = new StringBuilder();
-                        sb.append(nums[i]);
-                        sb.append(nums[j]);
-                        sb.append(nums[s]);
-                        sb.append(nums[e]);
-                        String hash = sb.toString();
-                        if(!set.contains(hash)) {
-                            ans.add(new ArrayList<>(Arrays.asList(nums[i], nums[j], nums[s], nums[e])));
-                            set.add(hash);
-                        }
-                            
-                        s++;
-                    } else if (sum < curTarget) {
-                        s++;
-                    } else {
-                        e--;
-                    }
+        // If we have run out of numbers to add, return res.
+        if (start == nums.length) {
+            return res;
+        }
+        
+        // There are k remaining values to add to the sum. The 
+        // average of these values is at least target / k.
+        int average_value = target / k;
+        
+        // We cannot obtain a sum of target if the smallest value
+        // in nums is greater than target / k or if the largest 
+        // value in nums is smaller than target / k.
+        if  (nums[start] > average_value || average_value > nums[nums.length - 1]) {
+            return res;
+        }
+        
+        if (k == 2) {
+            return twoSum(nums, target, start);
+        }
+    
+        for (int i = start; i < nums.length; ++i) {
+            if (i == start || nums[i - 1] != nums[i]) {
+                for (List<Integer> subset : kSum(nums, target - nums[i], i + 1, k - 1)) {
+                    res.add(new ArrayList<>(Arrays.asList(nums[i])));
+                    res.get(res.size() - 1).addAll(subset);
                 }
             }
         }
-        return ans;
+    
+        return res;
+    }
+        
+    public List<List<Integer>> twoSum(int[] nums, int target, int start) {
+        List<List<Integer>> res = new ArrayList<>();
+        Set<Integer> s = new HashSet<>();
+    
+        for (int i = start; i < nums.length; ++i) {
+            if (res.isEmpty() || res.get(res.size() - 1).get(1) != nums[i]) {
+                if (s.contains(target - nums[i])) {
+                    res.add(Arrays.asList(target - nums[i], nums[i]));
+                }
+            }
+            s.add(nums[i]);
+        }
+                                                  
+        return res;
     }
 }
