@@ -12,7 +12,6 @@ class Solution {
         for(int i=0; i<beans.length; i++) {
             curSum+=(long)beans[i];
             ans = Math.min(ans,erase+sum-curSum-(long)beans[i]*(beans.length-1-i));
-            // System.out.println(ans);
             erase+=beans[i];
         }
         return ans;
