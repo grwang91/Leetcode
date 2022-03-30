@@ -2,7 +2,10 @@ class Solution {
     public int maxLength(int[] ribbons, int k) {
         int ans = 0;
         int s = 0;
-        int e = 1000001;
+        int e = 0;
+        for(int ribbon: ribbons) {
+            e = Math.max(e, ribbon+1);
+        }
         
         while(s<e) {
             int m = (s+e)/2;
