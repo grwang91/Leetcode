@@ -1,6 +1,5 @@
 class Solution {
     public int brightestPosition(int[][] lights) {
-        Map<Integer, Integer> map = new HashMap<>();
         PriorityQueue<Integer> start = new PriorityQueue<>();
         PriorityQueue<Integer> end = new PriorityQueue<>();
         for(int i=0; i<lights.length; i++) {
