@@ -4,7 +4,7 @@ class Solution {
         int ans = 0;
         int mod = 1000000007;
 
-        for(int i=0; i<arr.length; i++) {
+        for(int i=0; i<arr.length-2; i++) {
             int s = i+1;
             int e = arr.length-1;
             // i = 1
