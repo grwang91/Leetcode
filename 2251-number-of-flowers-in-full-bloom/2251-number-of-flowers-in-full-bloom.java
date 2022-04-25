@@ -29,13 +29,7 @@ class Solution {
             int e = -1;
             int endCount = 0;
             while(!end.isEmpty() && end.peek() < cur) {
-                int ele = end.poll();
-                // if(e == ele) {
-                //     endCount++;
-                // } else {
-                //     e = ele;
-                //     endCount = 1;
-                // }
+                end.poll();
                 cnt--;
             }
             // System.out.println(cnt);
