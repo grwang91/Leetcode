@@ -30,20 +30,16 @@ class Solution {
             int endCount = 0;
             while(!end.isEmpty() && end.peek() < cur) {
                 int ele = end.poll();
-                if(e == ele) {
-                    endCount++;
-                } else {
-                    e = ele;
-                    endCount = 1;
-                }
+                // if(e == ele) {
+                //     endCount++;
+                // } else {
+                //     e = ele;
+                //     endCount = 1;
+                // }
                 cnt--;
             }
             // System.out.println(cnt);
-            if(e == cur) {
-                map.put(cur, cnt);    
-            } else {
-                map.put(cur, cnt);    
-            }
+            map.put(cur, cnt);    
             
         }
         
