@@ -1,24 +1,26 @@
+
 class Solution {
     public int longestStrChain(String[] words) {
-        int ans = 0;
-        Map<String, Integer> map = new HashMap<>();
-        Arrays.sort(words, (w1, w2)-> w1.length()-w2.length());
-        
-        for(int i=0; i<words.length; i++) {
-            String word = words[i];
-            int curLen = 0;
-            for(int j=0; j<word.length(); j++) {
-                StringBuilder sb = new StringBuilder(word);
-                sb.deleteCharAt(j);
-                String deleted = sb.toString();
-                int len = map.getOrDefault(deleted, 0)+1;
-                curLen = Math.max(len, curLen);
+        Map<String, Integer> dp = new HashMap<>();
+
+        // Sorting the list in terms of the word length.
+        Arrays.sort(words, (a, b) -> a.length() - b.length());
+
+        int longestWordSequenceLength = 1;
+
+        for (String word : words) {
+            int presentLength = 1;
+            // Find all possible predecessors for the current word by removing one letter at a time.
+            for (int i = 0; i < word.length(); i++) {
+                StringBuilder temp = new StringBuilder(word);
+                temp.deleteCharAt(i);
+                String predecessor = temp.toString();
+                int previousLength = dp.getOrDefault(predecessor, 0);
+                presentLength = Math.max(presentLength, previousLength + 1);
             }
-            
-            map.put(word, curLen);
-            ans = Math.max(ans, curLen);
+            dp.put(word, presentLength);
+            longestWordSequenceLength = Math.max(longestWordSequenceLength, presentLength);
         }
-        
-        return ans;
+        return longestWordSequenceLength;
     }
 }
