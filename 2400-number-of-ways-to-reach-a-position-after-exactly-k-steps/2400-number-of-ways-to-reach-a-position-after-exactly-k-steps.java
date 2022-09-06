@@ -1,23 +1,18 @@
 class Solution {
-    public int numberOfWays(int startPos, int endPos, int k) {
-        int[] dp = new int[3000];
-        int offset = 1000;
-        int MOD = 1000000007;
-        dp[startPos+offset] = 1;
-        
-        for(int i=0; i<k; i++) {
-            int[] tmp = new int[3000];
-            for(int j=0; j<tmp.length; j++) {
-                if(j>0) {
-                    tmp[j]=(dp[j-1]+tmp[j])%MOD;
-                }
-                if(j<tmp.length-1) {
-                    tmp[j]=(dp[j+1]+tmp[j])%MOD;
-                }
-            }
-            dp = tmp;
+    int p = 1000000007;
+    public int numberOfWays(int a, int b, int k) {
+        if ((a - b - k) % 2 != 0) return 0;
+        if (Math.abs(a - b) > k) return 0;
+        long res = 1L;
+        for (int i = 0; i < (b - a + k) / 2; ++i) {
+            res = res * (k - i) % p;
+            res = res * inv(i + 1) % p;
         }
-        
-        return dp[endPos+offset];
+        return (int)res;
+    }
+
+    private long inv(long a) {
+        if (a == 1) return 1;
+        return (p - p / a) * inv(p % a) % p;
     }
 }
