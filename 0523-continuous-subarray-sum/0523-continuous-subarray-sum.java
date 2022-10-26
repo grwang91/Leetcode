@@ -8,7 +8,6 @@ class Solution {
         for(int i=0; i<nums.length; i++) {
             sum=(sum+nums[i])%k;
             if(map.containsKey(sum)) {
-                System.out.println(i);
                 if(i-map.get(sum) >= 2)
                     return true;
             }
